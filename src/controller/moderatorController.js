@@ -1,12 +1,23 @@
 const Moderator = require("../model/Moderator");
 
 async function createModerator(req, res) {
+  const { name, email, password } = req.body;
+
   try {
-    const newModerator = await Moderator.create(req.body);
+    // Gera um hash seguro da senha usando bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Cria um novo administrador com a senha criptografada
+    const newModerator = await Moderator.create({
+      name: name,
+      email: email,
+      password: hashedPassword, // Salva a senha criptografada no banco de dados
+    });
+
     res.status(201).json(newModerator);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Erro ao criar moderador" });
+    res.status(500).json({ message: "Erro ao criar Moderador" });
   }
 }
 

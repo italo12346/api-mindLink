@@ -4,7 +4,7 @@ const userRoutes = require("./routes/userRoutes"); // Importa as rotas de usuár
 const psychologistRoutes = require("./routes/psychologistRoutes"); // Importa as rotas de pscicologo
 const moderatorRoutes = require("./routes/moderatorRoutes"); // Importa as rotas de moderador
 const adminRoutes = require("./routes/adminRoutes"); // Importa as rotas de administrador
-const authRoutes = require("./routes/authRoutes"); // Importa as rotas de administrador
+const authRoutes = require("./routes/authRoutes"); // Importa as rotas de autenticação
 const app = express();
 const PORT = process.env.PORT || 3000;
 

@@ -1,12 +1,23 @@
 const Psychologist = require("../model/Psychologist");
 
 async function createPsychologist(req, res) {
+  const { name, email, password } = req.body;
+
   try {
-    const newPsychologist = await Psychologist.create(req.body);
+    // Gera um hash seguro da senha usando bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Cria um novo psicólogos com a senha criptografada
+    const newPsychologist = await Psychologist.create({
+      name: name,
+      email: email,
+      password: hashedPassword, // Salva a senha criptografada no banco de dados
+    });
+
     res.status(201).json(newPsychologist);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Erro ao criar psicólogo" });
+    res.status(500).json({ message: "Erro ao criar psicólogos" });
   }
 }
 
