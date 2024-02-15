@@ -18,6 +18,10 @@ const User = connection.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  profilePicturePath: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   role: {
     type: Sequelize.ENUM("user"),
     allowNull: false,

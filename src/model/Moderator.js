@@ -18,6 +18,10 @@ const Moderator = connection.define("moderator", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  profilePicturePath: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   role: {
     type: Sequelize.ENUM("moderator"),
     allowNull: false,

@@ -5,6 +5,7 @@ const psychologistRoutes = require("./routes/psychologistRoutes"); // Importa as
 const moderatorRoutes = require("./routes/moderatorRoutes"); // Importa as rotas de moderador
 const adminRoutes = require("./routes/adminRoutes"); // Importa as rotas de administrador
 const authRoutes = require("./routes/authRoutes"); // Importa as rotas de autenticação
+const uploadFile = require("./service/googleDrive");
 const app = express();
 const PORT = process.env.PORT || 3000;
 

@@ -18,11 +18,24 @@ const Psychologist = connection.define("psychologist", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  profilePicturePath: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  specialties: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  approach: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   role: {
     type: Sequelize.ENUM("psychologist"),
     allowNull: false,
     defaultValue: "psychologist",
   },
+
   // Você pode adicionar mais campos conforme necessário, como data de criação, data de modificação, etc.
 });
 
