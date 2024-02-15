@@ -42,7 +42,6 @@ async function authenticateUser(email, password, role) {
     );
     return token;
   } catch (error) {
-    console.error(error);
     throw new Error("Erro ao autenticar usuário");
   }
 }

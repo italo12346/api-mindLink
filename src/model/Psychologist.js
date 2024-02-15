@@ -18,6 +18,10 @@ const Psychologist = connection.define("psychologist", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  phone: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   profilePicturePath: {
     type: Sequelize.STRING,
     allowNull: true,
@@ -35,8 +39,6 @@ const Psychologist = connection.define("psychologist", {
     allowNull: false,
     defaultValue: "psychologist",
   },
-
-  // Você pode adicionar mais campos conforme necessário, como data de criação, data de modificação, etc.
 });
 
 Psychologist.sync({ force: false }); // Sincronizar, depois que executar o código a primeira vez desabilite essa linha

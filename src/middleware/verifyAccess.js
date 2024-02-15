@@ -1,13 +1,13 @@
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
 const Admin = require("../model/Admin");
 const Psychologist = require("../model/Psychologist");
 const Moderator = require("../model/Moderator");
 const User = require("../model/User");
+const jwt = require("jsonwebtoken");
 
 async function verifyToken(req, res, next) {
   // Verifica se o cabeçalho 'Authorization' está presente na requisição
-  const token = req.headers.authorization;
+  const bearer = req.headers.authorization;
+  const token = bearer.split(" ")[1];
   if (!token) {
     return res
       .status(401)
@@ -16,7 +16,7 @@ async function verifyToken(req, res, next) {
 
   try {
     // Decodifica o token JWT para obter informações do usuário
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Verifica se o usuário existe com base no ID fornecido pelo token
     let user;
@@ -43,13 +43,14 @@ async function verifyToken(req, res, next) {
 
     // Adiciona as informações do usuário ao objeto 'req' para uso posterior nas rotas
     req.user = user;
+    req.user.id = decoded.id;
+    req.user.role = decoded.role;
     next(); // Permite que a solicitação continue para a próxima rota ou middleware
   } catch (error) {
     console.error(error);
     return res.status(401).json({ message: "Token de autenticação inválido" });
   }
 }
-
 async function verifyPermissions(req, res, next) {
   // Verifica se o usuário tem permissão para acessar a rota
   const { role } = req.user;

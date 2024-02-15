@@ -18,7 +18,7 @@ const Admin = connection.define("admin", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  profilePicturePath: {
+  profileImage: {
     type: Sequelize.STRING,
     allowNull: true,
   },

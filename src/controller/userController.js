@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const bcrypt = require("bcrypt");
 
 async function createUser(req, res) {
   const { name, email, password } = req.body;
@@ -74,10 +75,40 @@ async function deleteUser(req, res) {
     res.status(500).json({ message: "Erro ao deletar Usuario" });
   }
 }
+
+async function uploadProfileImage(req, res) {
+  const { id, role } = req.user;
+
+  // Obter o caminho do arquivo do corpo da requisição usando req.file.path
+  const filePath = req.file.path;
+
+  if (!filePath) {
+    return res.status(400).json({ message: "Nenhum arquivo foi enviado" });
+  }
+
+  try {
+    const fileId = await uploadFile(role + " " + id, filePath); // Realiza o upload da imagem para o Google Drive e obtém o ID do arquivo
+    const imageUrl = `https://drive.google.com/uc?export=view&id=${fileId}`; // URL de visualização da imagem no Google Drive
+
+    // Atualiza o campo profileImage no registro do administrador com o caminho da imagem
+    const user = await User.findByPk(req.user.id);
+    user.profileImage = imageUrl;
+    await user.save();
+
+    res.status(200).json({ imageUrl });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Erro ao fazer upload da imagem de perfil" });
+  }
+}
+
 module.exports = {
   createUser,
   getUsers,
   updateUser,
   deleteUser,
   getUserById,
+  uploadProfileImage,
 };

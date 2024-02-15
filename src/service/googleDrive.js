@@ -2,23 +2,24 @@ const fs = require("fs");
 const { google } = require("googleapis");
 const GOOGLE_API_FOLDER_ID = "1FdN0za1uumd83t2R9SOzXhAy2NqcNX6D";
 
-async function uploadFile() {
+async function uploadFile(userName, imageFilePath) {
   try {
     const auth = new google.auth.GoogleAuth({
-      keyFile: "./mindlink-google-drive.json",
+      keyFile: "./src/service/mindlink-google-drive.json",
       scopes: ["https://www.googleapis.com/auth/drive"],
     });
     const driveService = google.drive({
       version: "v3",
       auth,
     });
+    const fileName = `${userName}_profile_picture.jpg`;
     const fileMetaData = {
-      name: "snowplace.jpg",
+      name: fileName,
       parents: [GOOGLE_API_FOLDER_ID],
     };
     const media = {
       MimeType: "image/jpg",
-      body: fs.createReadStream("./20230810_082846.jpg"),
+      body: fs.createReadStream(imageFilePath), // Usando o caminho do arquivo passado como parâmetro
     };
     const response = await driveService.files.create({
       resource: fileMetaData,
@@ -30,6 +31,5 @@ async function uploadFile() {
     console.log("Erro criando arquivo", err);
   }
 }
-uploadFile().then((data) => {
-  console.log(data);
-});
+
+module.exports = uploadFile;
