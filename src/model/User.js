@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
+const Post = require("./Post");
 
 const User = connection.define("user", {
   name: {
@@ -11,7 +12,7 @@ const User = connection.define("user", {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true, // Garante que o campo seja um endereço de e-mail válido
+      isEmail: true,
     },
   },
   password: {
@@ -22,13 +23,10 @@ const User = connection.define("user", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  role: {
-    type: Sequelize.ENUM("user"),
-    allowNull: false,
-    defaultValue: "user",
-  },
 });
+Post.belongsTo(User); // Estabelece uma relação de muitos para um (muitos artigos pertence a uma categoria)
+User.hasMany(Post); // Estabelece uma relação de um para muitos (uma categoria tem muitos artigos)
 
-User.sync({ force: false }); // Sincronizar, depois que executar o código a primeira vez desabilite essa linha
+User.sync({ force: true }); // Sincronizar, depois que executar o codigo a primeira vez desabilite essa linha
 
 module.exports = User;

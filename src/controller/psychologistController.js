@@ -1,5 +1,6 @@
 const Psychologist = require("../model/Psychologist");
 const bcrypt = require("bcrypt");
+const uploadFile = require("../service/googleDrive");
 
 async function createPsychologist(req, res) {
   const { name, email, password } = req.body;
@@ -80,9 +81,7 @@ async function deletePsychologist(req, res) {
 }
 
 async function uploadProfileImage(req, res) {
-  const { id, role } = req.user;
-
-  // Obter o caminho do arquivo do corpo da requisição usando req.file.path
+  const { id } = req.user; // Obter o ID do psicólogo logado
   const filePath = req.file.path;
 
   if (!filePath) {
@@ -90,11 +89,11 @@ async function uploadProfileImage(req, res) {
   }
 
   try {
-    const fileId = await uploadFile(role + " " + id, filePath); // Realiza o upload da imagem para o Google Drive e obtém o ID do arquivo
+    const fileId = await uploadFile(`profile_${id}`, filePath); // Realizar o upload da imagem para o Google Drive e obter o ID do arquivo
     const imageUrl = `https://drive.google.com/uc?export=view&id=${fileId}`; // URL de visualização da imagem no Google Drive
 
-    // Atualiza o campo profileImage no registro do administrador com o caminho da imagem
-    const psychologist = await Psychologist.findByPk(req.user.id);
+    // Atualizar o campo profileImage no registro do psicólogo logado com o caminho da imagem
+    const psychologist = await Psychologist.findByPk(id);
     psychologist.profileImage = imageUrl;
     await psychologist.save();
 

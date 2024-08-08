@@ -3,15 +3,24 @@ const Psychologist = require("../model/Psychologist");
 const Moderator = require("../model/Moderator");
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
+const Post = require("../model/Post");
 
 async function verifyToken(req, res, next) {
   // Verifica se o cabeçalho 'Authorization' está presente na requisição
   const bearer = req.headers.authorization;
-  const token = bearer.split(" ")[1];
-  if (!token) {
+
+  if (!bearer) {
     return res
       .status(401)
       .json({ message: "Token de autenticação não fornecido" });
+  }
+
+  const token = bearer.split(" ")[1];
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Token de autenticação não fornecido corretamente" });
   }
 
   try {
@@ -51,6 +60,7 @@ async function verifyToken(req, res, next) {
     return res.status(401).json({ message: "Token de autenticação inválido" });
   }
 }
+
 async function verifyPermissions(req, res, next) {
   // Verifica se o usuário tem permissão para acessar a rota
   const { role } = req.user;
@@ -61,7 +71,6 @@ async function verifyPermissions(req, res, next) {
   }
   next(); // Permite que a solicitação continue para a próxima rota ou middleware
 }
-
 module.exports = {
   verifyToken,
   verifyPermissions,

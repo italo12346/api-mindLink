@@ -4,7 +4,7 @@ const adminController = require("../controller/adminController");
 const { verifyToken } = require("../middleware/verifyAccess");
 const { upload } = require("../middleware/uploadImage");
 
-router.post("/", verifyToken, adminController.createAdmin);
+router.post("/", adminController.createAdmin);
 router.get("/", verifyToken, adminController.getAdmins);
 router.get("/:id", verifyToken, adminController.getAdminById);
 router.put("/:id", verifyToken, adminController.updateAdmin);

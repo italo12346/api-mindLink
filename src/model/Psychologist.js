@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
+const Post = require("./Post");
 
 const Psychologist = connection.define("psychologist", {
   name: {
@@ -11,7 +12,7 @@ const Psychologist = connection.define("psychologist", {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true, // Garante que o campo seja um endereço de e-mail válido
+      isEmail: true,
     },
   },
   password: {
@@ -25,22 +26,32 @@ const Psychologist = connection.define("psychologist", {
   profilePicturePath: {
     type: Sequelize.STRING,
     allowNull: true,
+    defaultValue: "https://cdn-icons-png.flaticon.com/512/6073/6073874.png",
   },
   specialties: {
     type: Sequelize.STRING,
     allowNull: false,
+    defaultValue: "No specialty specified",
   },
   approach: {
     type: Sequelize.STRING,
     allowNull: false,
+    defaultValue: "No specialty specified",
   },
-  role: {
-    type: Sequelize.ENUM("psychologist"),
+  crp: {
+    type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: "psychologist",
+    defaultValue: "No specialty specified",
+  },
+  price: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: 0,
   },
 });
 
-Psychologist.sync({ force: false }); // Sincronizar, depois que executar o código a primeira vez desabilite essa linha
+Psychologist.hasMany(Post); // Um psicólogo pode ter muitos posts
+Post.belongsTo(Psychologist); // Um post pertence a um psicólogo
 
+Psychologist.sync({ force: false });
 module.exports = Psychologist;

@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
+const Post = require("./Post");
 
 const Admin = connection.define("admin", {
   name: {
@@ -11,7 +12,7 @@ const Admin = connection.define("admin", {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true, // Garante que o campo seja um endereço de e-mail válido
+      isEmail: true,
     },
   },
   password: {
@@ -22,14 +23,10 @@ const Admin = connection.define("admin", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  role: {
-    type: Sequelize.ENUM("admin"),
-    allowNull: false,
-    defaultValue: "admin",
-  },
-  // Outros campos adicionais conforme necessário
 });
 
-Admin.sync({ force: false }); // Sincronizar, depois que executar o código a primeira vez desabilite essa linha
+Admin.hasMany(Post); // Um admin pode ter muitos posts
+Post.belongsTo(Admin); // Um post pertence a um admin
 
+Admin.sync({ force: false });
 module.exports = Admin;

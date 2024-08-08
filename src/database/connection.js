@@ -10,6 +10,7 @@ const connection = new Sequelize(
     port: process.env.MYSQLPORT,
     dialect: process.env.DB_DIALECT,
     timezone: process.env.DB_TIMEZONE,
+    logging: console.log,
   }
 );
 

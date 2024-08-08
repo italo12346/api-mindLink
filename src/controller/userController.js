@@ -1,5 +1,7 @@
 const User = require("../model/User");
 const bcrypt = require("bcrypt");
+const uploadFile = require("../service/googleDrive");
+const fs = require("fs"); // Módulo file system para leitura de arquivos
 
 async function createUser(req, res) {
   const { name, email, password } = req.body;
@@ -18,7 +20,7 @@ async function createUser(req, res) {
     res.status(201).json(newUser);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Erro ao criar psicólogos" });
+    res.status(500).json({ message: "Erro ao criar usuario" });
   }
 }
 
@@ -44,12 +46,30 @@ async function getUserById(req, res) {
     res.status(500).json({ message: "Erro ao obter Usuario" });
   }
 }
+
 async function updateUser(req, res) {
   const { id } = req.params;
   try {
-    const [updated] = await User.update(req.body, {
-      where: { id: id },
-    });
+    let imageData = null;
+
+    // Verifica se há uma imagem enviada
+    if (req.file) {
+      // Lê o arquivo de imagem
+      const imageBuffer = fs.readFileSync(req.file.path);
+
+      // Converte a imagem para base64
+      imageData = imageBuffer.toString("base64");
+
+      // Deleta o arquivo temporário após a conversão
+      fs.unlinkSync(req.file.path);
+    }
+
+    // Atualiza o usuário no banco de dados, incluindo a imagem em base64 se existir
+    const [updated] = await User.update(
+      { ...req.body, profileImage: imageData }, // Incluindo a imagem convertida
+      { where: { id: id } }
+    );
+
     if (updated) {
       const updatedUser = await User.findByPk(id);
       return res.status(200).json(updatedUser);
@@ -60,6 +80,7 @@ async function updateUser(req, res) {
     res.status(500).json({ message: "Erro ao atualizar Usuario" });
   }
 }
+
 async function deleteUser(req, res) {
   const { id } = req.params;
   try {
