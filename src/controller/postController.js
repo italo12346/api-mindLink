@@ -17,9 +17,10 @@ exports.createPost = async (req, res) => {
 // Controlador para listar todos os posts
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.findAll({ include: Comments });
+    const posts = await Post.findAll();
     res.status(200).json(posts);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
